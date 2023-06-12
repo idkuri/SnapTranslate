@@ -1,0 +1,25 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.selectDisplay {
+    padding: 10px;
+    outline: none;
+    border: none;
+    background-color: aquamarine;
+    border-radius: 5px;
+}
+
+.selectDisplay:hover {
+    background-color: aliceblue;
+    cursor: pointer;
+}
+
+.activeHeader {
+    font-size: 25px
+}
