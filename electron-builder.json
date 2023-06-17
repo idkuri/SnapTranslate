@@ -1,0 +1,22 @@
+{
+    "appId": "test",
+    "productName": "translator",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "./screenshot.py"
+    ],
+    "win": {
+      "target": "NSIS"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+}
+  

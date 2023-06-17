@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain} = require('electron')
 const { spawn } = require('child_process');
 const path = require('path')
 
+var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -14,7 +16,9 @@ const createWindow = () => {
   })
 
   win.loadFile('index.html')
-  win.webContents.openDevTools()
+  if (isDev) {
+    win.webContents.openDevTools()
+  }
 
   ipcMain.handle('startScript', async (event, args) => {
     win.minimize();
@@ -23,6 +27,7 @@ const createWindow = () => {
   pythonProcess.on('exit', function (code) {
     if (code === 200) {
       console.log("Successful screenshot")
+      win.restore();
     }
     else {
       console.log("An Error has occured screenshotting Please check error in screenshot.py")
