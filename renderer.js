@@ -1,25 +1,12 @@
 const { ipcRenderer } = require('electron');
+const tesseract = require("node-tesseract-ocr")
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
 
-async function OpenMenu() {
+async function startScript() {
     try {
-        await ipcRenderer.invoke('getSources');
-    }
-    catch (error) {
-        console.log(error);
-    }
-}
-
-async function getActiveDisplay() {
-    try {
-        console.log("Hi")
-        const videoElement = document.querySelector('video');
-        const header = document.getElementById('selectDisplay')
-        const result = await ipcRenderer.invoke('get/activeSource');
-        const constraints = await ipcRenderer.invoke('get/stream');
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        header.innerText = result;
-        videoElement.srcObject = stream;
-        videoElement.play();
+        await ipcRenderer.invoke('startScript');
     }
     catch (error) {
         console.log(error);
@@ -27,7 +14,7 @@ async function getActiveDisplay() {
 }
 
 const displayBtn = document.getElementById('selectDisplay');
-displayBtn.onclick = OpenMenu;
+displayBtn.onclick = startScript;
 
 
 // window.electron.ipcRenderer.on('updateActiveSource', () => {

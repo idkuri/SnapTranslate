@@ -1,8 +1,6 @@
-const { app, BrowserWindow, ipcMain, desktopCapturer, Menu, navigator} = require('electron')
+const { app, BrowserWindow, ipcMain} = require('electron')
+const { spawn } = require('child_process');
 const path = require('path')
-
-let selectedSource = null
-let constraints = null
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -18,47 +16,22 @@ const createWindow = () => {
   win.loadFile('index.html')
   win.webContents.openDevTools()
 
-  ipcMain.handle('getSources', async (event, args) => {
-    const sources = await desktopCapturer.getSources({
-        types: ['window', 'screen']
-    })
-    const videoMenu = Menu.buildFromTemplate(
-        sources.map(source => {
-            return {
-                label: source.name,
-                click: () => selectSource(source)
-            }
-        })
-    )
-    videoMenu.popup();
-    return sources
-})
-
-ipcMain.handle('get/activeSource', async (event, args) => {
-    console.log(selectedSource);
-    return selectedSource;
-})
-
-ipcMain.handle('get/stream', async () => {
-    return constraints;
-})
-
-
-async function selectSource(source) {
-    selectedSource = source.name;
-    // console.log(selectedSource);
-
-    constraints = {
-        audio: false,
-        video: {
-            mandatory: {
-                chromeMediaSource: 'desktop',
-                chromeMediaSourceId: source.id
-            }
-        }
+  ipcMain.handle('startScript', async (event, args) => {
+    win.minimize();
+    const pythonProcess = spawn('python', ['screenshot.py']);
+    
+  pythonProcess.on('exit', function (code) {
+    if (code === 200) {
+      console.log("Successful screenshot")
     }
-    win.webContents.send('updateActiveSource');
-}
+    else {
+      console.log("An Error has occured screenshotting Please check error in screenshot.py")
+      exit(400)
+    }
+
+  });
+})
+
 }
 
 app.on('ready', () => {
