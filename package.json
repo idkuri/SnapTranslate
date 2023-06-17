@@ -5,9 +5,34 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dev": "set APP_DEV=true && electronmon .",
-    "build": "electron-builder",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "set APP_DEV=true && python -m PyInstaller -w --noconfirm --onedir --noconsole --distpath=./ screenshot.py && electronmon .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder --dir && python -m PyInstaller -w --onedir --noconsole --distpath=./dist/win-unpacked/resources screenshot.py"
+  },
+  "build": {
+    "appId": "com.example.app",
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [
+      "dist/resources/screenshot/screenshot.exe"
+    ],
+    "files": [
+      "main.js",
+      "index.html",
+      "styles.css",
+      "renderer.js",
+      "!dist/resources/screenshot/screenshot.exe"
+    ],
+    "win": {
+      "target": "NSIS"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "author": "",
   "license": "ISC",

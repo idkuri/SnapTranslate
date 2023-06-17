@@ -1,8 +1,11 @@
-const { app, BrowserWindow, ipcMain} = require('electron')
+const { app, BrowserWindow, ipcMain, session} = require('electron')
 const { spawn } = require('child_process');
 const path = require('path')
+const { dialog } = require('electron');
+
 
 var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
+var pyExe = isDev ? path.join(__dirname, '/screenshot/screenshot.exe') : path.join(__dirname, '..', '/screenshot/screenshot.exe')
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -10,8 +13,7 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false,
-        preload: path.join(__dirname, "preload.js")
+        contextIsolation: false
     }
   })
 
@@ -21,21 +23,32 @@ const createWindow = () => {
   }
 
   ipcMain.handle('startScript', async (event, args) => {
-    win.minimize();
-    const pythonProcess = spawn('python', ['screenshot.py']);
+    try {
+      win.minimize();
+      const pythonProcess = spawn(pyExe);
+      pythonProcess.on('exit', function (code) {
+        if (code === 0) {
+          win.webContents.send('logMessage', 'Successful screenshot');
+          console.log("Successful screenshot")
+          win.restore();
+        }
+        else {
+          console.log("An Error has occured screenshotting Please check error in screenshot.py")
+          console.log(code)
+        }
     
-  pythonProcess.on('exit', function (code) {
-    if (code === 200) {
-      console.log("Successful screenshot")
-      win.restore();
+      });
     }
-    else {
-      console.log("An Error has occured screenshotting Please check error in screenshot.py")
-      exit(400)
+    catch (err) {
+      dialog.showMessageBox({
+        type: 'info',
+        title: 'Alert',
+        message: err.toString(),
+        buttons: ['OK'],
+      });
     }
-
-  });
-})
+    
+  })
 
 }
 

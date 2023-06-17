@@ -6,7 +6,7 @@ const os = require('os');
 
 async function startScript() {
     try {
-        await ipcRenderer.invoke('startScript');
+        const status = await ipcRenderer.invoke('startScript');
     }
     catch (error) {
         console.log(error);
@@ -16,11 +16,6 @@ async function startScript() {
 const displayBtn = document.getElementById('selectDisplay');
 displayBtn.onclick = startScript;
 
-
-// window.electron.ipcRenderer.on('updateActiveSource', () => {
-//     getActiveDisplay();
-// })
-
-ipcRenderer.on('updateActiveSource', () => {
-    getActiveDisplay();
-})
+ipcRenderer.on('logMessage', (event, message) => {
+    console.log(message);
+});

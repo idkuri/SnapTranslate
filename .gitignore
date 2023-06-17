@@ -1,3 +1,6 @@
 node_modules
 photo.png
 dist/
+build
+screenshot/
+screenshot.spec

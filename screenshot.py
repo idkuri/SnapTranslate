@@ -2,6 +2,8 @@ from PIL import ImageTk, Image
 import mss
 import mss.tools
 import tkinter as tk
+from tkinter import messagebox
+import traceback
 
 
 selection_start = None
@@ -40,7 +42,7 @@ def displayImage(image):
         canvas.delete('selection_rect')
         cropImage(image)
         window.destroy()
-        exit(200)
+        exit(0)
     
     def updateSelectionRect(event):
         global rect_start, rect_end
@@ -74,8 +76,8 @@ def displayImage(image):
                         canvas.create_image(rect_end[0]+1, rect_end[1]+1, anchor='nw', image=tk_temp)
                         canvas.image = tk_temp
                 except Exception as e:
-                    print(f"Error occurred: {str(e)}")
-                    exit(400)
+                    traceback.print_exc()
+                    exit(1)
 
 
     # Create a Tkinter window
@@ -111,26 +113,30 @@ def displayImage(image):
 
 def captureScreen():
     # Get information about each monitor
-    with mss.mss() as sct:
-        monitors = sct.monitors
+    try:
+        with mss.mss() as sct:
+            monitors = sct.monitors
 
-    # Calculate the dimensions of the entire desktop
-    left = min(monitor["left"] for monitor in monitors)
-    top = min(monitor["top"] for monitor in monitors)
-    right = max(monitor["left"] + monitor["width"] for monitor in monitors)
-    bottom = max(monitor["top"] + monitor["height"] for monitor in monitors)
-    width = right - left
-    height = bottom - top
+        # Calculate the dimensions of the entire desktop
+        left = min(monitor["left"] for monitor in monitors)
+        top = min(monitor["top"] for monitor in monitors)
+        right = max(monitor["left"] + monitor["width"] for monitor in monitors)
+        bottom = max(monitor["top"] + monitor["height"] for monitor in monitors)
+        width = right - left
+        height = bottom - top
 
-    # Capture the entire desktop
-    with mss.mss() as sct:
-        screenshot = sct.grab({"left": left, "top": top, "width": width, "height": height})
+        # Capture the entire desktop
+        with mss.mss() as sct:
+            screenshot = sct.grab({"left": left, "top": top, "width": width, "height": height})
 
-    # Convert the captured image to PIL Image object
-    image = Image.frombytes("RGB", screenshot.size, screenshot.rgb)
+        # Convert the captured image to PIL Image object
+        image = Image.frombytes("RGB", screenshot.size, screenshot.rgb)
 
-    # Perform any additional operations with the captured image if needed
-    displayImage(image)
+        # Perform any additional operations with the captured image if needed
+        displayImage(image)
+    except Exception as e:
+        traceback.print_exc()
+        exit(1)
 
     
 
