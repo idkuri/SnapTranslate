@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, session} = require('electron')
 const { spawn } = require('child_process');
 const path = require('path')
 const { dialog } = require('electron');
+const fs = require('fs');
 
 
 var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
@@ -22,13 +23,14 @@ const createWindow = () => {
     win.webContents.openDevTools()
   }
 
+
   ipcMain.handle('startScript', async (event, args) => {
     try {
       win.minimize();
       const pythonProcess = spawn(pyExe);
       pythonProcess.on('exit', function (code) {
         if (code === 0) {
-          win.webContents.send('logMessage', 'Successful screenshot');
+          win.webContents.send('fetchImage');
           console.log("Successful screenshot")
           win.restore();
         }
@@ -63,5 +65,14 @@ app.on('ready', () => {
 })
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit()
+    fs.unlink(path.join('./photo.png'), (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+        return;
+      }
+      console.log('File deleted successfully.');
+    });
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
 })

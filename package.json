@@ -5,9 +5,12 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dev": "set APP_DEV=true && python -m PyInstaller -w --noconfirm --onedir --noconsole --distpath=./ screenshot.py && electronmon .",
+    "dev": "set APP_DEV=true && python -m PyInstaller -w --noconfirm --onedir --noconsole --distpath=./ screenshot.py && npx electronmon .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "electron-builder --dir && python -m PyInstaller -w --onedir --noconsole --distpath=./dist/win-unpacked/resources screenshot.py"
+  },
+  "electronmon": {
+    "patterns": ["!photo.png"]
   },
   "build": {
     "appId": "com.example.app",

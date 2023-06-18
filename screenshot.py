@@ -1,5 +1,4 @@
-from PIL import ImageTk, Image
-import mss
+from PIL import ImageTk, Image, ImageEnhance, ImageFilter
 import mss.tools
 import tkinter as tk
 from tkinter import messagebox
@@ -19,12 +18,14 @@ def cropImage(image):
     # Swap coordinates if needed to ensure proper cropping
     x1, y1 = min(selection_start[0], selection_end[0]), min(selection_start[1], selection_end[1])
     x2, y2 = max(selection_start[0], selection_end[0]), max(selection_start[1], selection_end[1])
+    desired_width = abs(x2 - x1)
+    desired_height = abs(y2 - y1)
 
     # Crop the image based on the selection
-    cropped_image = image.crop((x1, y1, x2, y2))
+    cropped_image = image.crop((x1, y1, x2, y2)).resize((desired_width, desired_height))
 
     # Display the cropped image or perform further operations
-    cropped_image.save('photo.png')
+    cropped_image.save('photo.png', dpi=(1000, 1000))
 
 
 def displayImage(image):
@@ -127,7 +128,16 @@ def captureScreen():
 
         # Capture the entire desktop
         with mss.mss() as sct:
-            screenshot = sct.grab({"left": left, "top": top, "width": width, "height": height})
+            # Adjust the pixel format and quality
+            capture_settings = {
+                "left": left,
+                "top": top,
+                "width": width,
+                "height": height,
+                "pixel_format": "RGB",  # Change pixel format if needed
+                "quality": 100,  # Increase quality to maximum
+            }
+            screenshot = sct.grab(capture_settings)
 
         # Convert the captured image to PIL Image object
         image = Image.frombytes("RGB", screenshot.size, screenshot.rgb)
