@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, session} = require('electron')
+const { app, BrowserWindow, ipcMain, session, Menu} = require('electron')
 const { spawn } = require('child_process');
 const path = require('path')
 const { dialog } = require('electron');
@@ -12,27 +12,50 @@ const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
+    // titleBarStyle: 'hidden',
     webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
     }
   })
-
+  win.webContents.openDevTools()
   win.loadFile('index.html')
   if (isDev) {
     win.webContents.openDevTools()
   }
 
+  
+  ipcMain.handle('minimize', async (event, args) => {
+    win.minimize();
+  })
+
+  ipcMain.handle('maximize', async (event, args) => {
+    win.maximize();
+  })
+
+  ipcMain.handle('unmaximize', async (event, args) => {
+    win.unmaximize();
+  })
+  ipcMain.handle('close', async (event, args) => {
+    win.close();
+  })
+
+  ipcMain.handle('isMaximized', async (event, args) => {
+    return win.isMaximized();
+  })
+    
+
 
   ipcMain.handle('startScript', async (event, args) => {
     try {
-      win.minimize();
+      win.hide();
       const pythonProcess = spawn(pyExe);
       pythonProcess.on('exit', function (code) {
         if (code === 0) {
           win.webContents.send('fetchImage');
           console.log("Successful screenshot")
-          win.restore();
+          win.show();
         }
         else {
           console.log("An Error has occured screenshotting Please check error in screenshot.py")
@@ -56,6 +79,7 @@ const createWindow = () => {
 
 app.on('ready', () => {
   createWindow();
+  Menu.setApplicationMenu(null);
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -65,7 +89,7 @@ app.on('ready', () => {
 })
 
 app.on('window-all-closed', () => {
-    fs.unlink(path.join('./photo.png'), (err) => {
+    fs.unlink(path.join('./tmp2211567.png'), (err) => {
       if (err) {
         console.error('Error deleting file:', err);
         return;

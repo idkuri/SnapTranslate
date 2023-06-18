@@ -25,7 +25,7 @@ def cropImage(image):
     cropped_image = image.crop((x1, y1, x2, y2)).resize((desired_width, desired_height))
 
     # Display the cropped image or perform further operations
-    cropped_image.save('photo.png', dpi=(1000, 1000))
+    cropped_image.save('tmp2211567.png', dpi=(1000, 1000))
 
 
 def displayImage(image):

@@ -1,5 +1,4 @@
 const { ipcRenderer } = require('electron');
-const tesseract = require("node-tesseract-ocr")
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -19,9 +18,56 @@ displayBtn.onclick = startScript;
 
 
 ipcRenderer.on('fetchImage', (event, message) => {
-    console.log("EEEE")
     const imgDisplay = document.getElementById('imageDisplay');
     imgDisplay.style.display = 'block';
-    imgDisplay.src = `photo.png?${Date.now()}`;
+    imgDisplay.src = path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`);
 });
+
+
+
+
+// When document has loaded, initialise
+document.onreadystatechange = (event) => {
+    if (document.readyState == "complete") {
+        handleWindowControls();
+    }
+};
+
+window.onbeforeunload = (event) => {
+    /* If window is reloaded, remove win event listeners
+    (DOM element listeners get auto garbage collected but not
+    Electron win listeners as the win is not dereferenced unless closed) */
+    win.removeAllListeners();
+}
+
+function handleWindowControls() {
+    // Make minimise/maximise/restore/close buttons work when they are clicked
+    document.getElementById('min-button').addEventListener("click", async event => {
+        const status = await ipcRenderer.invoke('minimize');
+    });
+
+    document.getElementById('max-button').addEventListener("click", async event => {
+        const status = await ipcRenderer.invoke('maximize');
+        toggleMaxRestoreButtons();
+    });
+
+    document.getElementById('restore-button').addEventListener("click", async  event => {
+        const status = await ipcRenderer.invoke('unmaximize');
+        toggleMaxRestoreButtons();
+    });
+
+    document.getElementById('close-button').addEventListener("click", async event => {
+        const status = await ipcRenderer.invoke('close');
+    });
+
+    async function toggleMaxRestoreButtons() {
+        const status = await ipcRenderer.invoke('isMaximized')
+        console.log(status)
+        if (status) {
+            document.body.classList.add('maximized');
+        } else {
+            document.body.classList.remove('maximized');
+        }
+    }
+}
 

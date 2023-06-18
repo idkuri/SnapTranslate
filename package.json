@@ -10,7 +10,9 @@
     "build": "electron-builder --dir && python -m PyInstaller -w --onedir --noconsole --distpath=./dist/win-unpacked/resources screenshot.py"
   },
   "electronmon": {
-    "patterns": ["!photo.png"]
+    "patterns": [
+      "!tmp2211567.png"
+    ]
   },
   "build": {
     "appId": "com.example.app",
@@ -25,7 +27,12 @@
       "index.html",
       "styles.css",
       "renderer.js",
-      "!dist/resources/screenshot/screenshot.exe"
+      "!dist/resources/screenshot/screenshot.exe",
+      "windows.css",
+      "buildResources/icons/*",
+      "buildResources/fonts/*",
+      "buildResources/logo.ico"
+      
     ],
     "win": {
       "target": "NSIS"
@@ -44,6 +51,8 @@
     "electron-builder": "^24.4.0"
   },
   "dependencies": {
+    "@fluentui/react": "^8.110.3",
+    "bootstrap-icons": "^1.10.5",
     "electronmon": "^2.0.2",
     "node-tesseract-ocr": "^2.2.1"
   }
