@@ -88,11 +88,7 @@ app.on('ready', () => {
 })
 
 app.on('window-all-closed', () => {
-    fs.unlink(path.join('./tmp2211567.png'), (err) => {
-      if (err) {
-        console.error('Error deleting file:', err);
-        return;
-      }
+    fs.unlink(path.join('./tmp2211567.png'), () => {
       console.log('File deleted successfully.');
     });
     if (process.platform !== 'darwin') {
