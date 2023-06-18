@@ -19,7 +19,6 @@ const createWindow = () => {
         contextIsolation: false
     }
   })
-  win.webContents.openDevTools()
   win.loadFile('index.html')
   if (isDev) {
     win.webContents.openDevTools()
