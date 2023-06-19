@@ -12,6 +12,7 @@ Issues:
 Currently only support Japanese -> English
 
 Demo:
+
 Start Button:
 ![image](https://github.com/idkuri/SnapTranslate/assets/78403245/48f8c3e0-f5a1-46f2-8722-4de865db371d)
 
