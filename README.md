@@ -6,7 +6,7 @@ SnapTranslate is an OCR (Optical Character Recognition) translation tool that al
 This tool is similar to the windows snipping tool in terms of capturing images and then extracts the text using the Tesseract Engine and then translates it using DeepL translation.
 
 
-Currently Only support Japanese -> English
+Currently only support Japanese -> English
 
 Demo:
 Start Button:
