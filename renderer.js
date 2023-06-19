@@ -1,7 +1,12 @@
 const { ipcRenderer } = require('electron');
-const fs = require('fs');
 const path = require('path');
-const os = require('os');
+
+let isDev;
+
+(async () => {
+    isDev =  await ipcRenderer.invoke('isDev');
+})();
+
 
 async function startScript() {
     try {
@@ -20,7 +25,9 @@ displayBtn.onclick = startScript;
 ipcRenderer.on('fetchImage', (event, message) => {
     const imgDisplay = document.getElementById('imageDisplay');
     imgDisplay.style.display = 'block';
-    imgDisplay.src = path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`);
+    console.log(isDev);
+    console.log(path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`))
+    imgDisplay.src = isDev ? `tmp2211567.png?${Date.now()}` : path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`);
 });
 
 

@@ -5,7 +5,7 @@ const { dialog } = require('electron');
 const fs = require('fs');
 
 
-var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : false;
+var isDev = process.env.APP_DEV ? true : false;
 var pyExe = isDev ? path.join(__dirname, '/screenshot/screenshot.exe') : path.join(__dirname, '..', '/screenshot/screenshot.exe')
 
 const createWindow = () => {
@@ -44,7 +44,9 @@ const createWindow = () => {
     return win.isMaximized();
   })
     
-
+  ipcMain.handle('isDev', async(event, args) => {
+    return isDev;
+  })
 
   ipcMain.handle('startScript', async (event, args) => {
     try {
