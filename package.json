@@ -32,7 +32,6 @@
       "buildResources/icons/*",
       "buildResources/fonts/*",
       "buildResources/logo.ico"
-      
     ],
     "win": {
       "target": "NSIS"
@@ -48,7 +47,7 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^25.1.0",
-    "electron-builder": "^24.4.0"
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "@fluentui/react": "^8.110.3",
