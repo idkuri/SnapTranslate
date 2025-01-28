@@ -1,5 +1,6 @@
 SnapTranslate
 
+**WIP**
 Stack: Electron.js, Python (Screenshot tool), Pytesseract(Text detection), DeepL (Translation Engine)
 
 SnapTranslate is an OCR (Optical Character Recognition) translation tool that allows you to capture a snapshot of a portion of your screen and translate the extracted text into your desired language.
