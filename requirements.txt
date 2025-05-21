@@ -1,4 +1,4 @@
-Pillow
 mss
-pytesseract
-deepl
+numpy
+Pillow
+PyQt5

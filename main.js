@@ -3,22 +3,38 @@ const { spawn } = require('child_process');
 const path = require('path')
 const { dialog } = require('electron');
 const fs = require('fs');
-
+const { start } = require('repl');
+const { exit } = require('process');
 
 var isDev = process.env.APP_DEV ? true : false;
-var pyExe = isDev ? path.join(__dirname, '/screenshot/screenshot.exe') : path.join(__dirname, '..', '/screenshot/screenshot.exe')
+var pythonProcess;
+
+const startPythonProcess = () => {
+  var pyExe = isDev ? path.join(__dirname, 'screenshot.py') : path.join(process.resourcesPath, 'screenshot', 'screenshot.exe')
+
+  try {
+    pythonProcess = isDev ? spawn("python", [pyExe], {stdio: ["pipe", "pipe", "pipe"]}) : spawn(pyExe, [], {stdio: ["pipe", "pipe", "pipe"]});
+  }
+  catch (error) {
+    console.log(error);
+    exit(1);
+  }
+
+}
 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     frame: false,
+    // transparent: true,
     // titleBarStyle: 'hidden',
     webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
     }
   })
+  
   win.loadFile('index.html')
   if (isDev) {
     win.webContents.openDevTools()
@@ -36,7 +52,15 @@ const createWindow = () => {
   ipcMain.handle('unmaximize', async (event, args) => {
     win.unmaximize();
   })
+
   ipcMain.handle('close', async (event, args) => {
+    fs.unlink(path.join('./tmp2211567.png'), () => {
+      console.log('File deleted successfully.');
+    });
+    pythonProcess.stdin.write('exit\n');
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
     win.close();
   })
 
@@ -48,22 +72,21 @@ const createWindow = () => {
     return isDev;
   })
 
+  pythonProcess.stdout.on('data', function (data) {
+    message = data.toString().trim();
+    if (message === "end") {
+      win.webContents.send('fetchImage');
+      win.setOpacity(1);
+    }
+    else {
+      console.log(message)
+    }
+  });
+
   ipcMain.handle('startScript', async (event, args) => {
     try {
-      win.hide();
-      const pythonProcess = spawn(pyExe);
-      pythonProcess.on('exit', function (code) {
-        if (code === 0) {
-          win.webContents.send('fetchImage');
-          console.log("Successful screenshot")
-          win.show();
-        }
-        else {
-          console.log("An Error has occured screenshotting Please check error in screenshot.py")
-          console.log(code)
-        }
-    
-      });
+      win.setOpacity(0);
+      pythonProcess.stdin.write('start\n');
     }
     catch (err) {
       dialog.showMessageBox({
@@ -89,11 +112,11 @@ app.on('ready', () => {
   })
 })
 
-app.on('window-all-closed', () => {
-    fs.unlink(path.join('./tmp2211567.png'), () => {
-      console.log('File deleted successfully.');
-    });
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
-})
+const main = () => {
+  startPythonProcess();
+  if (isDev) {
+    pythonProcess.stdin.write('dev\n');
+  }
+}
+
+main();

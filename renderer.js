@@ -1,7 +1,8 @@
 const { ipcRenderer } = require('electron');
 const path = require('path');
 
-let isDev;
+var isDev;
+var pyPath;
 
 (async () => {
     isDev =  await ipcRenderer.invoke('isDev');
@@ -10,6 +11,7 @@ let isDev;
 
 async function startScript() {
     try {
+        console.log(pyPath);
         await ipcRenderer.invoke('startScript');
 
     }
@@ -27,7 +29,7 @@ ipcRenderer.on('fetchImage', (event, message) => {
     imgDisplay.style.display = 'block';
     console.log(isDev);
     console.log(path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`))
-    imgDisplay.src = isDev ? `tmp2211567.png?${Date.now()}` : path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`);
+    imgDisplay.src = isDev ? `tmp2211567.png?${Date.now()}` : path.join(process.resourcesPath, 'screenshot', `tmp2211567.png?${Date.now()}`);
 });
 
 

@@ -4,3 +4,7 @@ dist/
 build
 screenshot/
 screenshot.spec
+/venv
+test.spec
+backup.py
+dist.rar

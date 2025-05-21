@@ -4,10 +4,11 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "set APP_DEV=true && python -m PyInstaller -w --noconfirm --onedir --noconsole --distpath=./ screenshot.py && npx electronmon .",
+    "start": "pyinstaller --noconfirm screenshot.py && electron .",
+    "dev": "set APP_DEV=true && npx electronmon .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-builder --dir && python -m PyInstaller -w --onedir --noconsole --distpath=./dist/win-unpacked/resources screenshot.py"
+    "clean": "rimraf dist && rimraf build && rimraf screenshot.spec",
+    "build": "electron-builder --dir && pyinstaller --noconfirm screenshot.py --distpath=./dist/win-unpacked/resources"
   },
   "electronmon": {
     "patterns": [
@@ -47,7 +48,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^25.1.0",
-    "electron-builder": "^24.13.3"
+    "electron-builder": "^24.13.3",
+    "rimraf": "^6.0.1"
   },
   "dependencies": {
     "@fluentui/react": "^8.110.3",
