@@ -1,5 +1,5 @@
 {
-  "name": "translate",
+  "name": "SnapTranslate",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -7,8 +7,8 @@
     "start": "pyinstaller --noconfirm screenshot.py && electron .",
     "dev": "set APP_DEV=true && npx electronmon .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rimraf dist && rimraf build && rimraf screenshot.spec",
-    "build": "electron-builder --dir && pyinstaller --noconfirm screenshot.py --distpath=./dist/win-unpacked/resources"
+    "clean": "rimraf dist && rimraf build && rimraf screenshot.spec && rimraf buildResources/screenshot",
+    "build": "pyinstaller --noconfirm screenshot.py --distpath=./buildResources && electron-builder --win"
   },
   "electronmon": {
     "patterns": [
@@ -16,26 +16,27 @@
     ]
   },
   "build": {
+    "productName": "SnapTranslate",
     "appId": "com.example.app",
     "directories": {
       "output": "dist"
     },
-    "extraResources": [
-      "dist/resources/screenshot/screenshot.exe"
-    ],
     "files": [
       "main.js",
       "index.html",
       "styles.css",
       "renderer.js",
-      "!dist/resources/screenshot/screenshot.exe",
       "windows.css",
-      "buildResources/icons/*",
-      "buildResources/fonts/*",
-      "buildResources/logo.ico"
+      "buildResources/**"
     ],
+    "extraFiles": [
+    {
+      "from": "buildResources/screenshot",
+      "to": "resources/screenshot"
+    }],
     "win": {
-      "target": "NSIS"
+      "target": "NSIS",
+      "icon": "buildResources/logo_256x256.ico"
     },
     "mac": {
       "target": "dmg"

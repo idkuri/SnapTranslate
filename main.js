@@ -17,6 +17,7 @@ const startPythonProcess = () => {
   }
   catch (error) {
     console.log(error);
+    win.close();
     exit(1);
   }
 
@@ -29,6 +30,7 @@ const createWindow = () => {
     frame: false,
     // transparent: true,
     // titleBarStyle: 'hidden',
+    icon: path.join(__dirname, './buildResources/logo.png'),
     webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
