@@ -1,6 +1,6 @@
 # **Setup Guide For SnapTranslate Frontend**
 
-# Install Dependencies
+**Install Dependencies**
 
 Type the following into the terminal:
 ```bash
@@ -8,14 +8,14 @@ npm install
 pip install -r requirements.txt
 ```
 
-# Run in development mode
+**Run in development mode**
 
 Type the following into the terminal:
 ```bash
 npm run dev
 ```
 
-# Building the Project
+**Building the Project**
 
 Type the following into the terminal:
 ```bash
