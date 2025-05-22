@@ -2,3 +2,4 @@ mss
 numpy
 Pillow
 PyQt5
+pyinstaller
