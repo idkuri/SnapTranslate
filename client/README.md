@@ -1,6 +1,7 @@
 # **Setup Guide For SnapTranslate Frontend**
 
 **Virtual Environment for Python**
+
 Creating the Virtual Environment:
 ```bash
 python -m venv venv
