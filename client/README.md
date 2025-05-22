@@ -2,6 +2,7 @@
 
 **Install Dependencies**
 
+SnapTranslate uses Node version v22.15.1 please install the appropriate node version.
 Type the following into the terminal:
 ```bash
 npm install
