@@ -1,5 +1,15 @@
 # **Setup Guide For SnapTranslate Frontend**
 
+** Virtual Environment for Python **
+Creating the Virtual Environment:
+```bash
+python -m venv venv
+```
+Running the Virtual Environment:
+```bash
+./venv/Scripts/activate
+```
+
 **Install Dependencies**
 
 SnapTranslate uses Node version v22.15.1 please install the appropriate node version.
