@@ -1,0 +1,9 @@
+client/node_modules
+client/tmp2211567.png
+client/dist/
+client/build
+client/screenshot/
+client/screenshot.spec
+client/venv
+client/*.spec
+client/buildResources/screenshot/
