@@ -7,3 +7,4 @@ client/screenshot.spec
 client/venv
 client/*.spec
 client/buildResources/screenshot/
+server/__pycache__/

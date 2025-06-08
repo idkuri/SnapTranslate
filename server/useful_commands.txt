@@ -1,0 +1,2 @@
+## Running nodemon with flask server
+nodemon --exec "flask --app server.py run" --watch "./"
