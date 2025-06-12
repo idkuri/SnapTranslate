@@ -8,7 +8,6 @@ const { exit } = require('process');
 
 var isDev = process.env.APP_DEV ? true : false;
 var pythonProcess;
-
 const startPythonProcess = () => {
   var pyExe = isDev ? path.join(__dirname, 'screenshot.py') : path.join(process.resourcesPath, 'screenshot', 'screenshot.exe')
 

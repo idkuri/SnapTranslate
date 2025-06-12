@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { ipcRenderer } = require('electron');
 const path = require('path');
 
@@ -24,12 +25,37 @@ const displayBtn = document.getElementById('selectDisplay');
 displayBtn.onclick = startScript;
 
 
-ipcRenderer.on('fetchImage', (event, message) => {
+ipcRenderer.on('fetchImage', async (event, message) => {
     const imgDisplay = document.getElementById('imageDisplay');
+    const imageName = `tmp2211567.png`;
     imgDisplay.style.display = 'block';
-    console.log(isDev);
-    console.log(path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`))
-    imgDisplay.src = isDev ? `tmp2211567.png?${Date.now()}` : path.join(process.resourcesPath, 'screenshot', `tmp2211567.png?${Date.now()}`);
+    const imagePath = isDev ? imageName : path.join(process.resourcesPath, 'screenshot', imageName)
+    const imageBuffer = fs.readFileSync(imagePath);
+    
+    // console.log(isDev);
+    // console.log(path.join(__dirname, '..', '..', `tmp2211567.png?${Date.now()}`))
+
+    const formData = new FormData();
+    formData.append('translate_to', 'English');
+    formData.append(
+        'image', 
+        new Blob([imageBuffer], {type: 'image/png'}), 
+        imageName
+    )
+    imgDisplay.src = `${imagePath}?t=${Date.now()}`;
+
+
+    try {
+       const response = await fetch("http://localhost:5000/api/translate", {
+            method: 'POST',
+            body: formData
+        })
+
+        const result = await response.json();
+        console.log(result);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 });
 
 
@@ -43,9 +69,6 @@ document.onreadystatechange = (event) => {
 };
 
 window.onbeforeunload = (event) => {
-    /* If window is reloaded, remove win event listeners
-    (DOM element listeners get auto garbage collected but not
-    Electron win listeners as the win is not dereferenced unless closed) */
     win.removeAllListeners();
 }
 

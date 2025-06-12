@@ -4,11 +4,10 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "pyinstaller --noconfirm screenshot.py && electron .",
     "dev": "set APP_DEV=true && npx electronmon .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist && rimraf build && rimraf screenshot.spec && rimraf buildResources/screenshot",
-    "build": "pyinstaller --noconfirm screenshot.py --distpath=./buildResources && electron-builder --win"
+    "build": "npm run clean && pyinstaller --noconfirm screenshot.py --distpath=./buildResources && electron-builder --win"
   },
   "electronmon": {
     "patterns": [
