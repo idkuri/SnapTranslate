@@ -4,8 +4,8 @@ from google import genai
 from google.genai import types
 from PIL import Image
 import dotenv
-# Load environment variables from .env file
 
+# Load environment variables from .env file
 app = Flask(__name__)
 client = genai.Client(
     api_key=dotenv.get_key('.env', 'GEMMA3_API_KEY'),
@@ -35,12 +35,14 @@ def translate():
                       Edge cases:
                         1. If the image contains text in multiple languages, translate all text to the target language.
                         2. the image may say please translate in another language translate that portion as well.
-                        3. Do not translate names if possible convert to romaji.
+                        3. Do not translate names convert to romaji instead.
                         4. Please be careful with the translation, it should be accurate and natural.
                         5. Please include all text in the image do not skip any text.
                         6. Join all paragraphs with a space and remove all new line characters before translating.
-                        7. If you are translating multiple paragraphs make sure you are seperating each translation with the delimter "ㅤㅤㅤ".
+                        7. If you are translating multiple paragraphs translate all paragraphs in one go.
                         8. Remove all new line characters from the original text before translating.
+                        9. When I do .split() on the response, it should return two items, the original text and the translated text. This one is IMPORTANT.
+                        10. If you are unable to translate the image, please return an error message: Error: Unable to translate the image.
                       Format: 
                       '<Original Text>ㅤㅤㅤ<Translated Text>'"""],
         )
